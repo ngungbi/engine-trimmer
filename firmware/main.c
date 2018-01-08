@@ -14,8 +14,9 @@ volatile uint8_t timerH = 0;
 volatile uint16_t time0 = 0;
 volatile uint16_t time1 = 0;
 
-uint16_t trimLow = 0;
-uint16_t trimHigh = 0;
+volatile uint16_t trimLow = 0;
+volatile uint16_t trimHigh = 0;
+volatile uint16_t range = 1000;
 
 volatile uint16_t pwmIn = 2000;
 volatile uint16_t pwmOut = 2000;
@@ -43,9 +44,15 @@ ISR(INT0_vect){
 		PORTB &= ~(1<<1);
 		time1 = timeNow;
 		pwmIn = (time1-time0);
+
+		// kasih batas nilai
 		if(pwmIn<2000) pwmIn = 2000;
 		else if(pwmIn>4000) pwmIn = 4000;
-		//OCR1A = pwmIn;
+
+		// remap
+		float value = (float)(pwmIn-2000)/2000.0 * range;
+		pwmOut = (uint16_t)value + 2000 + trimLow;
+		OCR1A = pwmOut;
 	}
 }
 
@@ -100,13 +107,17 @@ int main( void ){
 
 	sei();
  	OCR1A = 2000;
+
+ 	PORTD |= (1<<3);
 	while(1){
-		trimLow  = ADC_Read(0)>>1;
-		trimHigh = ADC_Read(1)>>1;
-		uint16_t range = 2000-trimHigh-trimLow;
-		float value = (float)(pwmIn-2000)/2000.0 * range;
-		pwmOut = (uint16_t)value + 2000 + trimLow;
-		OCR1A = pwmOut;
-		_delay_ms(10);
+		//if(PIND&(1<<3)==0){
+			trimLow  = ADC_Read(0);
+			trimHigh = ADC_Read(1);
+			range = 2000 - ( (trimHigh+trimLow)>>1 );
+		//}
+		// float value = (float)(pwmIn-2000)/2000.0 * range;
+		// pwmOut = (uint16_t)value + 2000 + trimLow;
+		//OCR1A = pwmOut;
+		_delay_ms(20);
 	}
 }

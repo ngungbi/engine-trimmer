@@ -19,6 +19,9 @@
 *.zip
 .*.swo
 .*.swp
+*.eep
+*.lss
+*.map
 .built
 .context
 .cproject
