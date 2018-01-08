@@ -80,7 +80,7 @@ OBJDIR = .
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c serial.c hx711.c adc.c
+SRC = $(TARGET).c adc.c
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
@@ -273,7 +273,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 # Type: avrdude -c ?
 # to get a full listing.
 #
-AVRDUDE_PROGRAMMER = arduino
+AVRDUDE_PROGRAMMER = avrisp
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
 AVRDUDE_PORT = com4    # programmer connected to serial device
