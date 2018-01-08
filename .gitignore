@@ -22,6 +22,8 @@
 *.eep
 *.lss
 *.map
+*.s#*
+*.b#*
 .built
 .context
 .cproject
